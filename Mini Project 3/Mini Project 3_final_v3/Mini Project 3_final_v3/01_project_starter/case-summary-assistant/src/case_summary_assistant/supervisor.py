@@ -45,30 +45,60 @@ def run_pipeline(case: PriorAuthCase) -> tuple[HandoffPackage, list[dict]]:
         (one per executed stage).
     """
     # ── Mini Project Task 4: Implement run_pipeline() ──────────────────────────
-    raise NotImplementedError(
-        "Mini Project Task 4: Implement run_pipeline() in supervisor.py.\n"
-        "Steps:\n"
-        "  agent_events = []\n"
-        "  drafted_at = datetime.utcnow()\n"
-        "\n"
-        "  Stage 1 — RETRIEVAL:\n"
-        "    try:\n"
-        "      chunks = retriever.retrieve(case)\n"
-        "      agent_events.append({'agent_name': 'RETRIEVER', 'input_hash': _input_hash(case.case_id),\n"
-        "        'output_summary': f'{len(chunks)} chunks retrieved'})\n"
-        "    except Exception as e:\n"
-        "      return HandoffPackage(case_id=case.case_id, summary=None, retrieved_chunks=[],\n"
-        "        review_result=None, confidence_score=None, status='PIPELINE_ERROR',\n"
-        "        error_reason=str(e), drafted_at=drafted_at), agent_events\n"
-        "\n"
-        "  Stage 2 — DRAFTING (same pattern, call drafter.draft(case, chunks))\n"
-        "  Stage 3 — REVIEW (same pattern, call reviewer.review(summary, chunks))\n"
-        "\n"
-        "  Stage 4 — HANDOFF_ASSEMBLY:\n"
-        "    status = 'HANDOFF_READY' if review_result.recommendation == 'APPROVE' else 'NEEDS_REVIEW'\n"
-        "    agent_events.append({'agent_name': 'HANDOFF_ASSEMBLY', ...})\n"
-        "    return HandoffPackage(case_id, summary, chunks, review_result,\n"
-        "      confidence_score=review_result.confidence_score, status=status,\n"
-        "      error_reason=None, drafted_at=drafted_at), agent_events\n"
-        "See specs/005_supervisor_contract.md"
+    agent_events: list[dict] = []
+    drafted_at = datetime.utcnow()
+
+    def _pipeline_error(e: Exception) -> HandoffPackage:
+        return HandoffPackage(
+            case_id=case.case_id, summary=None, retrieved_chunks=[],
+            review_result=None, confidence_score=None, status="PIPELINE_ERROR",
+            error_reason=str(e), drafted_at=drafted_at,
+        )
+
+    # Stage 1 — RETRIEVAL
+    try:
+        chunks = retriever.retrieve(case)
+        agent_events.append({
+            "agent_name": "RETRIEVER",
+            "input_hash": _input_hash(case.case_id),
+            "output_summary": f"{len(chunks)} chunks retrieved",
+        })
+    except Exception as e:
+        return _pipeline_error(e), agent_events
+
+    # Stage 2 — DRAFTING
+    try:
+        summary = drafter.draft(case, chunks)
+        agent_events.append({
+            "agent_name": "DRAFTER",
+            "input_hash": _input_hash(case.case_id),
+            "output_summary": f"{len(summary.cited_policy_sections)} cited sections",
+        })
+    except Exception as e:
+        return _pipeline_error(e), agent_events
+
+    # Stage 3 — REVIEW
+    try:
+        review_result = reviewer.review(summary, chunks)
+        agent_events.append({
+            "agent_name": "REVIEWER",
+            "input_hash": _input_hash(case.case_id),
+            "output_summary": f"confidence={review_result.confidence_score:.2f}",
+        })
+    except Exception as e:
+        return _pipeline_error(e), agent_events
+
+    # Stage 4 — HANDOFF_ASSEMBLY
+    status = "HANDOFF_READY" if review_result.recommendation == "APPROVE" else "NEEDS_REVIEW"
+    agent_events.append({
+        "agent_name": "HANDOFF_ASSEMBLY",
+        "input_hash": _input_hash(case.case_id),
+        "output_summary": status,
+    })
+
+    package = HandoffPackage(
+        case_id=case.case_id, summary=summary, retrieved_chunks=chunks,
+        review_result=review_result, confidence_score=review_result.confidence_score,
+        status=status, error_reason=None, drafted_at=drafted_at,
     )
+    return package, agent_events

@@ -28,8 +28,9 @@ def _get_collection():
     """Open and return the ChromaDB collection. Raise RetrievalError if not found."""
     try:
         import chromadb
+        from case_summary_assistant.embeddings import CompanyEmbeddingFunction
         client = chromadb.PersistentClient(path=str(Path(CHROMA_PATH)))
-        return client.get_collection(name=CHROMA_COLLECTION)
+        return client.get_collection(name=CHROMA_COLLECTION, embedding_function=CompanyEmbeddingFunction())
     except Exception as e:
         raise RetrievalError(
             f"ChromaDB collection '{CHROMA_COLLECTION}' not found at '{CHROMA_PATH}'. "
@@ -58,19 +59,31 @@ def retrieve(case: PriorAuthCase, top_k: int = TOP_K_CHUNKS) -> list[RetrievedCh
         If the collection is missing or returns zero results.
     """
     # ── Mini Project Task 1: Implement retrieve() ──────────────────────────────
-    raise NotImplementedError(
-        "Mini Project Task 1: Implement retrieve() in retriever.py.\n"
-        "Steps:\n"
-        "  1. Call _get_collection() to open the ChromaDB collection\n"
-        "  2. Build query_text = case.icd10_prefix + ' ' + case.procedure_code + ' ' + case.payer_id\n"
-        "  3. Call collection.query(query_texts=[query_text], n_results=top_k)\n"
-        "  4. Map each result to RetrievedChunk(chunk_text, source_doc, page_number, similarity_score)\n"
-        "     - documents[0][i] → chunk_text\n"
-        "     - metadatas[0][i]['source'] → source_doc\n"
-        "     - metadatas[0][i].get('page', 1) → page_number\n"
-        "     - 1 - distances[0][i] → similarity_score (ChromaDB returns L2 distances)\n"
-        "  5. Sort by similarity_score descending\n"
-        "  6. Raise RetrievalError if result list is empty\n"
-        "  7. Return the list\n"
-        "See specs/002_retrieval_contract.md"
-    )
+    collection = _get_collection()
+    query_text = f"{case.icd10_prefix} {case.procedure_code} {case.payer_id}"
+
+    results = collection.query(query_texts=[query_text], n_results=top_k)
+
+    documents = results.get("documents") or [[]]
+    metadatas = results.get("metadatas") or [[]]
+    distances = results.get("distances") or [[]]
+
+    if not documents or not documents[0]:
+        raise RetrievalError(
+            f"No results returned from ChromaDB collection '{CHROMA_COLLECTION}' "
+            f"for query '{query_text}'."
+        )
+
+    chunks: list[RetrievedChunk] = []
+    for doc, meta, dist in zip(documents[0], metadatas[0], distances[0]):
+        chunks.append(
+            RetrievedChunk(
+                chunk_text=doc,
+                source_doc=meta["source"],
+                page_number=meta.get("page", 1),
+                similarity_score=1 - dist,
+            )
+        )
+
+    chunks.sort(key=lambda c: c.similarity_score, reverse=True)
+    return chunks

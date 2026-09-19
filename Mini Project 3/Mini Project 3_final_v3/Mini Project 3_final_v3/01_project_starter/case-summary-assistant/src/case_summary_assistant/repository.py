@@ -124,15 +124,74 @@ def save_package(
     - Case and all audit events must be committed together or not at all.
     """
     # ── Mini Project Task 5: Implement save_package() ──────────────────────────
-    raise NotImplementedError(
-        "Mini Project Task 5: Implement save_package() in repository.py.\n"
-        "Steps:\n"
-        "  1. Build safe_summary_json from package.summary (exclude any PII fields)\n"
-        "  2. Build retrieved_doc_sources = comma-joined list of source_doc filenames from package.retrieved_chunks\n"
-        "  3. Open connection and BEGIN transaction\n"
-        "  4. INSERT into handoff_cases\n"
-        "  5. For each event in agent_events:\n"
-        "     INSERT into agent_audit_events with event_id=str(uuid.uuid4())\n"
-        "  6. COMMIT — if anything fails, ROLLBACK\n"
-        "See specs/006_persistence_and_audit.md"
+    init_db(db_path)
+
+    safe_summary_json = None
+    if package.summary is not None:
+        patient_context = dict(package.summary.patient_context)
+        for pii_field in ("name", "date_of_birth", "phone", "email", "address"):
+            patient_context.pop(pii_field, None)
+        safe_summary_json = json.dumps({
+            "patient_context": patient_context,
+            "approved_treatment": package.summary.approved_treatment,
+            "cited_policy_sections": [
+                {"source_doc": s.source_doc, "excerpt": s.excerpt, "relevance": s.relevance}
+                for s in package.summary.cited_policy_sections
+            ],
+            "coverage_notes": package.summary.coverage_notes,
+            "recommended_next_steps": package.summary.recommended_next_steps,
+            "drafted_by": package.summary.drafted_by,
+        })
+
+    retrieved_doc_sources = ",".join(
+        sorted({c.source_doc for c in package.retrieved_chunks})
     )
+
+    # HandoffPackage carries no payer_id (it is not part of the anonymized
+    # patient_context); the column is retained for future use.
+    payer_id = ""
+
+    conn = get_connection(db_path)
+    try:
+        conn.execute("BEGIN")
+        conn.execute(
+            """
+            INSERT INTO handoff_cases
+                (case_id, payer_id, status, summary_json, confidence_score,
+                 retrieved_doc_sources, error_reason, drafted_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                package.case_id,
+                payer_id or "",
+                package.status,
+                safe_summary_json,
+                package.confidence_score,
+                retrieved_doc_sources,
+                package.error_reason,
+                package.drafted_at.isoformat(),
+            ),
+        )
+        executed_at = datetime.utcnow().isoformat()
+        for event in agent_events:
+            conn.execute(
+                """
+                INSERT INTO agent_audit_events
+                    (event_id, case_id, agent_name, input_hash, output_summary, executed_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    str(uuid.uuid4()),
+                    package.case_id,
+                    event["agent_name"],
+                    event["input_hash"],
+                    event["output_summary"],
+                    executed_at,
+                ),
+            )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()

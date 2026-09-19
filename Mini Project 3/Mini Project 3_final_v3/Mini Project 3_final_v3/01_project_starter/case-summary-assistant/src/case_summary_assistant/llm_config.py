@@ -75,10 +75,12 @@ def get_llm_client():
         If required endpoint configuration is missing.
     """
     # ── Mini Project Task 6: Configure the approved enterprise AI endpoint ─────
-    raise NotImplementedError(
-        "Mini Project Task 6: Implement get_llm_client() in llm_config.py.\n"
-        "Steps:\n"
-        "  Read ENTERPRISE_LLM_ENDPOINT, ENTERPRISE_LLM_API_KEY, and\n"
-        "  ENTERPRISE_LLM_DEPLOYMENT, then construct the approved client.\n"
-        "See specs/003_drafting_contract.md"
-    )
+    if not ENTERPRISE_LLM_ENDPOINT or not ENTERPRISE_LLM_API_KEY or not ENTERPRISE_LLM_DEPLOYMENT:
+        raise ValueError(
+            "Missing enterprise AI endpoint configuration. Set ENTERPRISE_LLM_ENDPOINT, "
+            "ENTERPRISE_LLM_API_KEY, and ENTERPRISE_LLM_DEPLOYMENT in .env."
+        )
+
+    from openai import OpenAI
+
+    return OpenAI(base_url=ENTERPRISE_LLM_ENDPOINT, api_key=ENTERPRISE_LLM_API_KEY)

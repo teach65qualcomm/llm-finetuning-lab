@@ -70,26 +70,52 @@ def draft(case: PriorAuthCase, chunks: list[RetrievedChunk]) -> CaseSummary:
         If the LLM response cannot be parsed into a valid CaseSummary.
     """
     # ── Mini Project Task 2: Implement draft() ────────────────────────────────
-    raise NotImplementedError(
-        "Mini Project Task 2: Implement draft() in drafter.py.\n"
-        "Steps:\n"
-        "  1. Call get_llm_client() to get the configured LLM client\n"
-        "  2. Build the prompt using DRAFTING_PROMPT_TEMPLATE.format(\n"
-        "       case_context=_build_case_context(case),\n"
-        "       chunks=_build_chunks_context(chunks)\n"
-        "     )\n"
-        "  3. Call the LLM using the OpenAI SDK client shape:\n"
-        "       response = client.chat.completions.create(\n"
-        "           model=ENTERPRISE_LLM_DEPLOYMENT,\n"
-        "           messages=[{'role': 'user', 'content': prompt}],\n"
-        "           response_format={'type': 'json_object'}\n"
-        "       )\n"
-        "  4. Read the response as: response.choices[0].message.content\n"
-        "     This matches the mock in tests/test_drafter.py.\n"
-        "  5. Parse the content string as JSON\n"
-        "  6. Map to CaseSummary — wrap each cited section as CitedSection object\n"
-        "  7. Raise DraftingError if parsing fails or required fields are missing\n"
-        "  8. Verify patient_context does NOT contain name, date_of_birth, phone, email\n"
-        "     If any are present, remove them before returning\n"
-        "See specs/003_drafting_contract.md"
+    client = get_llm_client()
+    prompt = DRAFTING_PROMPT_TEMPLATE.format(
+        case_context=_build_case_context(case),
+        chunks=_build_chunks_context(chunks),
+    )
+
+    response = client.chat.completions.create(
+        model=ENTERPRISE_LLM_DEPLOYMENT,
+        messages=[{"role": "user", "content": prompt}],
+        response_format={"type": "json_object"},
+    )
+    content = response.choices[0].message.content
+
+    try:
+        data = json.loads(content)
+    except (TypeError, json.JSONDecodeError) as e:
+        raise DraftingError(f"LLM response is not valid JSON: {e}") from e
+
+    required_fields = {
+        "patient_context", "approved_treatment", "cited_policy_sections",
+        "coverage_notes", "recommended_next_steps",
+    }
+    missing = required_fields - data.keys()
+    if missing:
+        raise DraftingError(f"LLM response missing required fields: {sorted(missing)}")
+
+    patient_context = dict(data["patient_context"])
+    for pii_field in ("name", "date_of_birth", "phone", "email", "address"):
+        patient_context.pop(pii_field, None)
+
+    try:
+        cited_sections = [
+            CitedSection(
+                source_doc=section["source_doc"],
+                excerpt=section["excerpt"],
+                relevance=section["relevance"],
+            )
+            for section in data["cited_policy_sections"]
+        ]
+    except (KeyError, TypeError) as e:
+        raise DraftingError(f"LLM response has malformed cited_policy_sections: {e}") from e
+
+    return CaseSummary(
+        patient_context=patient_context,
+        approved_treatment=data["approved_treatment"],
+        cited_policy_sections=cited_sections,
+        coverage_notes=data["coverage_notes"],
+        recommended_next_steps=list(data["recommended_next_steps"]),
     )

@@ -26,19 +26,16 @@ def chunk_text(text: str, size: int = CHUNK_SIZE, overlap: int = CHUNK_OVERLAP) 
 
 def ingest():
     import chromadb
-    from chromadb import Documents, EmbeddingFunction, Embeddings
 
     # IMPORTANT — Embedding policy:
     # Use only the embedding endpoint or SDK approved by your organisation.
     # Do NOT use DefaultEmbeddingFunction from ChromaDB.
     # Ask your trainer/admin for the approved embedding endpoint or SDK.
-    # Replace the NotImplementedError below with your company-approved embedding call.
-
-    class CompanyEmbeddingFunction(EmbeddingFunction):
-        def __call__(self, input: Documents) -> Embeddings:
-            # Replace with the approved enterprise embedding API call
-            # e.g. your_sdk.embed(texts=input) or requests.post(your_endpoint, ...)
-            raise NotImplementedError("Plug in the approved enterprise embedding service here")
+    #
+    # The approved-endpoint stand-in used here lives in
+    # case_summary_assistant/embeddings.py so retriever.py can open the
+    # collection with the exact same embedding function used at ingest time.
+    from case_summary_assistant.embeddings import CompanyEmbeddingFunction
 
     print(f"Using ChromaDB at: {CHROMA_PATH}")
     print(f"Collection: {CHROMA_COLLECTION}")
