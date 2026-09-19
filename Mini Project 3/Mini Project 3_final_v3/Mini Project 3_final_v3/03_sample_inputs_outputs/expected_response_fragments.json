@@ -1,0 +1,81 @@
+[
+  {
+    "scenario": "high_confidence_tier1_cardiovascular",
+    "case_id": "CASE-HIGH-001",
+    "expected": {
+      "status": "HANDOFF_READY",
+      "confidence_min": 0.70,
+      "notes": "Tier-1 payer + cardiovascular + URGENT combination should retrieve strong evidence from BlueCross or Aetna Tier-1 policy docs. Review should APPROVE."
+    },
+    "example_response_fragment": {
+      "status": "HANDOFF_READY",
+      "confidence_score": 0.90,
+      "summary": {
+        "approved_treatment": "Echocardiography (CPT 93306)",
+        "patient_context": {
+          "age_band": "31-55",
+          "diagnosis_category": "Cardiovascular",
+          "urgency_level": "URGENT",
+          "payer_tier": 1
+        },
+        "coverage_notes": "Covered at 90% in-network after deductible. Expedited review applies for URGENT cases.",
+        "cited_policy_sections": [
+          {
+            "source_doc": "BlueCross_Tier1_General_Coverage_Policy.txt",
+            "excerpt": "echocardiography (CPT 93306) are covered at 90% after deductible for Tier 1 members",
+            "relevance": "Confirms procedure coverage rate"
+          }
+        ],
+        "recommended_next_steps": [
+          "Schedule echocardiography with a network cardiologist",
+          "Verify patient deductible status before appointment"
+        ]
+      },
+      "review_notes": []
+    }
+  },
+  {
+    "scenario": "medium_confidence_tier2_musculoskeletal",
+    "case_id": "CASE-MED-001",
+    "expected": {
+      "status_options": ["HANDOFF_READY", "NEEDS_REVIEW"],
+      "notes": "Tier-2 payer, orthopedic procedure (27447 knee replacement). Policy coverage may be partial. Either status is acceptable depending on retrieved evidence quality."
+    },
+    "example_response_fragment": {
+      "status": "NEEDS_REVIEW",
+      "confidence_score": 0.65,
+      "review_notes": [
+        "Citation not found in retrieved chunks: coverage criteria for knee arthroplasty"
+      ]
+    }
+  },
+  {
+    "scenario": "low_confidence_tier3_oncology",
+    "case_id": "CASE-LOW-001",
+    "expected": {
+      "status": "NEEDS_REVIEW",
+      "confidence_max": 0.70,
+      "notes": "Tier-3 payer + complex oncology surgery (61510 craniotomy). Policy evidence likely sparse. Expect FLAG_FOR_HUMAN from reviewer."
+    },
+    "example_response_fragment": {
+      "status": "NEEDS_REVIEW",
+      "confidence_score": 0.50,
+      "review_notes": [
+        "Citation not found in retrieved chunks: complex neurosurgical coverage criteria"
+      ]
+    }
+  },
+  {
+    "scenario": "idempotency_test",
+    "case_id": "CASE-IDEM-001",
+    "expected": {
+      "idempotent_replay_on_second": true,
+      "notes": "Submit the same case_id twice. The second POST must return idempotent_replay: true without running any agents or creating new audit records."
+    },
+    "example_response_fragment": {
+      "case_id": "CASE-IDEM-001",
+      "idempotent_replay": true,
+      "status": "HANDOFF_READY"
+    }
+  }
+]

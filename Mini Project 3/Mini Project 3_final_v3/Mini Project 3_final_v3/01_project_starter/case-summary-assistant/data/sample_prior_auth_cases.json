@@ -1,0 +1,70 @@
+[
+  {
+    "scenario": "high_confidence_tier1_cardiovascular",
+    "description": "Tier-1 payer, cardiovascular procedure, URGENT — expect HANDOFF_READY with high confidence",
+    "case": {
+      "case_id": "CASE-HIGH-001",
+      "payer_id": "PAY001",
+      "icd10_code": "I25.10",
+      "icd10_prefix": "I",
+      "procedure_code": "93306",
+      "urgency": "URGENT",
+      "age_band": "31-55",
+      "diagnosis_category": "Cardiovascular",
+      "procedure_type": "Diagnostic imaging",
+      "payer_tier": 1
+    },
+    "expected": {"status": "HANDOFF_READY", "confidence_min": 0.70}
+  },
+  {
+    "scenario": "medium_confidence_tier2_musculoskeletal",
+    "description": "Tier-2 payer, orthopedic procedure, ROUTINE — expect HANDOFF_READY or NEEDS_REVIEW",
+    "case": {
+      "case_id": "CASE-MED-001",
+      "payer_id": "PAY005",
+      "icd10_code": "M54.5",
+      "icd10_prefix": "M",
+      "procedure_code": "27447",
+      "urgency": "ROUTINE",
+      "age_band": "56-70",
+      "diagnosis_category": "Musculoskeletal",
+      "procedure_type": "Surgical",
+      "payer_tier": 2
+    },
+    "expected": {"status_options": ["HANDOFF_READY", "NEEDS_REVIEW"]}
+  },
+  {
+    "scenario": "low_confidence_tier3_oncology",
+    "description": "Tier-3 payer, complex oncology surgery, ROUTINE — expect NEEDS_REVIEW due to low confidence",
+    "case": {
+      "case_id": "CASE-LOW-001",
+      "payer_id": "PAY010",
+      "icd10_code": "C34.10",
+      "icd10_prefix": "C",
+      "procedure_code": "61510",
+      "urgency": "ROUTINE",
+      "age_band": "over70",
+      "diagnosis_category": "Oncology",
+      "procedure_type": "Complex surgical",
+      "payer_tier": 3
+    },
+    "expected": {"status": "NEEDS_REVIEW", "confidence_max": 0.70}
+  },
+  {
+    "scenario": "idempotency_test",
+    "description": "Submit same case twice — second response must have idempotent_replay: true",
+    "case": {
+      "case_id": "CASE-IDEM-001",
+      "payer_id": "PAY001",
+      "icd10_code": "E11.9",
+      "icd10_prefix": "E",
+      "procedure_code": "99214",
+      "urgency": "ROUTINE",
+      "age_band": "31-55",
+      "diagnosis_category": "Endocrine/Metabolic",
+      "procedure_type": "Office visit",
+      "payer_tier": 1
+    },
+    "expected": {"idempotent_replay_on_second": true}
+  }
+]

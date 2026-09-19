@@ -1,0 +1,35 @@
+Cigna Medical Tier 2 — Coverage Policy
+Version 2024.1 | Effective January 1, 2024
+
+PAGE 1
+SECTION 1: TIER 2 MEMBER BENEFITS
+Cigna Tier 2 members receive standard network access with moderate cost-sharing requirements.
+Prior authorization turnaround: 5 business days for standard, 24 hours for URGENT, 4 hours for STAT.
+Tier 2 members have an annual deductible of $1,000 individual and $2,000 family.
+
+PAGE 2
+SECTION 2: NEUROLOGICAL PROCEDURES
+MRI brain with contrast (CPT 70553) for neurological indications requires prior authorization.
+Cigna requires documentation of clinical necessity including symptom duration and prior
+conservative treatment. Neurological conditions including migraines (G43.909), multiple
+sclerosis (G35), and Parkinson's disease (G20) are covered. Coverage is 80% in-network.
+
+PAGE 3
+SECTION 3: MENTAL HEALTH SERVICES
+Mental health treatment including depression (F32.1), anxiety (F41.1), and schizophrenia (F20.9)
+is covered at parity with medical benefits. Inpatient mental health requires prior authorization.
+Outpatient psychotherapy does not require prior authorization for the first 12 sessions.
+Bipolar disorder (F31.9) and ADHD (F90.0) treatment plans require an annual review.
+
+PAGE 4
+SECTION 4: DIGESTIVE AND GI COVERAGE
+Colonoscopy for diagnostic purposes (CPT 45378) requires prior authorization when not
+part of standard screening intervals. Upper GI procedures and liver disease management
+(K74.60) require documentation of medical necessity. GI bleeds (K92.1) are treated as
+urgent and do not require prior authorization.
+
+PAGE 5
+SECTION 5: PRIOR AUTHORIZATION DENIAL CRITERIA
+Cigna may deny prior authorization when: the procedure is not medically necessary per
+evidence-based guidelines, the member has not completed required step therapy,
+documentation is incomplete, or the service is experimental/investigational.

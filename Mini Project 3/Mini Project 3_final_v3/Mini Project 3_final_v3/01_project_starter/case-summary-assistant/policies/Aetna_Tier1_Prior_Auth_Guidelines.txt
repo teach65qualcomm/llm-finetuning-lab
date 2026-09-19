@@ -1,0 +1,36 @@
+Aetna Health Tier 1 — Prior Authorization Guidelines
+Version 2024.2 | Effective March 1, 2024
+
+PAGE 1
+SECTION 1: PRIOR AUTHORIZATION OVERVIEW
+Aetna requires prior authorization for procedures that are medically complex, high-cost,
+or where clinical appropriateness review is needed. Tier 1 members benefit from
+streamlined authorization processes with 48-hour turnaround for standard requests.
+URGENT requests are reviewed within 8 hours. STAT requests within 2 hours.
+
+PAGE 2
+SECTION 2: ONCOLOGY COVERAGE
+Cancer treatment procedures including mastectomy (CPT 19307) and craniotomy for tumor
+(CPT 61510) require prior authorization. Aetna's oncology team reviews all cancer-related
+prior-auth requests. Tier 1 members have access to Aetna's Centers of Excellence network
+for complex oncological procedures. Coverage is 90% in-network for surgical oncology procedures.
+
+PAGE 3
+SECTION 3: ORTHOPEDIC AND MUSCULOSKELETAL
+Total knee replacement (CPT 27447) requires prior authorization, documentation of
+conservative treatment failure (minimum 3 months of physical therapy), and BMI documentation.
+Tier 1 coverage is 85% in-network after $500 deductible. Physical therapy (CPT 97110)
+is covered without prior authorization for the first 20 sessions per year.
+
+PAGE 4
+SECTION 4: GASTROINTESTINAL PROCEDURES
+Upper GI endoscopy with biopsy (CPT 43239) and colonoscopy (CPT 45378) require prior
+authorization when performed as elective screening outside standard intervals. Diagnostic
+GI procedures ordered for acute symptoms do not require prior authorization. Coverage is
+90% for Tier 1 members for medically necessary GI procedures.
+
+PAGE 5
+SECTION 5: FORMULARY AND DRUG COVERAGE
+Specialty medications related to covered procedures are included in the Aetna Preferred
+Formulary. Prior authorization for specialty drugs is processed by the Aetna Pharmacy team
+separately from medical procedure prior-auth requests.

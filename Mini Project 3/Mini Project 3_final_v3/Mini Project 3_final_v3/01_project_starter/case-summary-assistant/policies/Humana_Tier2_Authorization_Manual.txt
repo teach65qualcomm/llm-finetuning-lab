@@ -1,0 +1,35 @@
+Humana Insurance Tier 2 — Authorization Manual
+Version 2024.2 | Effective February 1, 2024
+
+PAGE 1
+SECTION 1: AUTHORIZATION REQUIREMENTS
+Humana Tier 2 requires prior authorization for procedures with high clinical variability
+or cost. Standard review: 5 business days. URGENT: 24 hours. STAT: 4 hours.
+Authorization is valid for 90 days from the approval date.
+
+PAGE 2
+SECTION 2: CARDIOVASCULAR COVERAGE
+Echocardiography (CPT 93306) requires prior authorization for Tier 2 members when
+ordered for non-acute indications. Coronary artery bypass surgery (CPT 33533) requires
+second surgical opinion and prior authorization. Coverage is 80% in-network.
+Cardiac rehabilitation programs require prior authorization and are limited to 36 sessions.
+
+PAGE 3
+SECTION 3: MUSCULOSKELETAL CONDITIONS
+Back pain (M54.5) management including surgery requires documentation of 6 months of
+conservative therapy failure. Total knee replacement (CPT 27447) requires physical therapy
+documentation and weight management compliance if BMI > 40. Rheumatoid arthritis (M06.9)
+biologic therapy requires step therapy with at least 2 conventional DMARDs.
+
+PAGE 4
+SECTION 4: GENITOURINARY CONDITIONS
+Kidney disease management (N18.3) including dialysis requires prior authorization.
+Prostate conditions (N40.0) requiring surgical intervention need prior authorization.
+Kidney stones (N20.0) treatment with lithotripsy requires prior authorization.
+UTI treatment (N39.0) does not require prior authorization.
+
+PAGE 5
+SECTION 5: PEDIATRIC AND YOUNG ADULT COVERAGE
+Members under 18 require parental consent for all prior authorization requests.
+Pediatric specialty services are covered at 85% in-network. Young adult members
+(18-30) on parental coverage follow the same authorization requirements as adult members.

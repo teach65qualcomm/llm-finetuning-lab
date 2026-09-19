@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "case-summary-assistant"
+version = "1.0.0"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "baseline: tests that must pass before implementation begins",
+    "implementation: tests that prove completed tasks",
+]

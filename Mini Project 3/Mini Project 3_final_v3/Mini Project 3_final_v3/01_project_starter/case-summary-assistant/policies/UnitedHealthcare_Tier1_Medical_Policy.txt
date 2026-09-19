@@ -1,0 +1,36 @@
+UnitedHealthcare Tier 1 — Medical Policy and Coverage Rules
+Version 2024.1 | Effective January 1, 2024
+
+PAGE 1
+SECTION 1: COVERAGE PRINCIPLES
+UnitedHealthcare covers medically necessary services when provided by network providers.
+Tier 1 members receive the highest benefit level with 90-95% coverage for most services.
+Prior authorization decisions are made within 3 business days for standard requests and
+same day for URGENT or STAT clinical situations.
+
+PAGE 2
+SECTION 2: INFECTIOUS DISEASE TREATMENT
+Treatment for infectious disease diagnoses including sepsis (A41.9) and related conditions
+requires prior authorization when treatment involves IV antibiotics, hospitalization, or
+specialty infectious disease consultation. Standard antibiotic courses for common infections
+(A49.01, A02.0) do not require prior authorization for Tier 1 members.
+
+PAGE 3
+SECTION 3: ENDOCRINE AND METABOLIC CONDITIONS
+Management of diabetes (E11.9, E10.9) including insulin pump therapy, continuous glucose
+monitoring, and related procedures requires prior authorization. Lipid management (E78.5)
+with PCSK9 inhibitors requires step therapy documentation. Standard diabetes management
+supplies and visits are covered without prior authorization.
+
+PAGE 4
+SECTION 4: RESPIRATORY PROCEDURES
+COPD management (J44.1) including pulmonary rehabilitation requires prior authorization.
+Asthma treatment (J45.50) with biologics requires step therapy failure documentation.
+Standard respiratory office visits and spirometry do not require prior authorization.
+Emergency respiratory care (J96.00) is covered without prior authorization.
+
+PAGE 5
+SECTION 5: CLAIM SUBMISSION AND APPEALS
+Claims must be submitted within 180 days of service. Members have the right to appeal
+any adverse determination within 180 days of the denial notice. Expedited appeals for
+urgent clinical situations are reviewed within 72 hours.
