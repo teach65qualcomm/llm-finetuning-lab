@@ -64,6 +64,11 @@ def run_pipeline(case: PriorAuthCase) -> tuple[HandoffPackage, list[dict]]:
             "output_summary": f"{len(chunks)} chunks retrieved",
         })
     except Exception as e:
+        agent_events.append({
+            "agent_name": "RETRIEVER",
+            "input_hash": _input_hash(case.case_id),
+            "output_summary": f"ERROR: {e}",
+        })
         return _pipeline_error(e), agent_events
 
     # Stage 2 — DRAFTING
@@ -75,6 +80,11 @@ def run_pipeline(case: PriorAuthCase) -> tuple[HandoffPackage, list[dict]]:
             "output_summary": f"{len(summary.cited_policy_sections)} cited sections",
         })
     except Exception as e:
+        agent_events.append({
+            "agent_name": "DRAFTER",
+            "input_hash": _input_hash(case.case_id),
+            "output_summary": f"ERROR: {e}",
+        })
         return _pipeline_error(e), agent_events
 
     # Stage 3 — REVIEW
@@ -86,6 +96,11 @@ def run_pipeline(case: PriorAuthCase) -> tuple[HandoffPackage, list[dict]]:
             "output_summary": f"confidence={review_result.confidence_score:.2f}",
         })
     except Exception as e:
+        agent_events.append({
+            "agent_name": "REVIEWER",
+            "input_hash": _input_hash(case.case_id),
+            "output_summary": f"ERROR: {e}",
+        })
         return _pipeline_error(e), agent_events
 
     # Stage 4 — HANDOFF_ASSEMBLY

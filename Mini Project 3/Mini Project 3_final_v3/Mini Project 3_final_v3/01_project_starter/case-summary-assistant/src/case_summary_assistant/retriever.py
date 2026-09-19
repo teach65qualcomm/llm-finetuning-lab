@@ -59,7 +59,13 @@ def retrieve(case: PriorAuthCase, top_k: int = TOP_K_CHUNKS) -> list[RetrievedCh
         If the collection is missing or returns zero results.
     """
     # ── Mini Project Task 1: Implement retrieve() ──────────────────────────────
-    collection = _get_collection()
+    try:
+        collection = _get_collection()
+    except RetrievalError:
+        raise
+    except Exception as e:
+        raise RetrievalError(f"Could not open ChromaDB collection: {e}") from e
+
     query_text = f"{case.icd10_prefix} {case.procedure_code} {case.payer_id}"
 
     results = collection.query(query_texts=[query_text], n_results=top_k)
